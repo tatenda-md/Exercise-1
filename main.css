@@ -1,0 +1,47 @@
+.title{
+    color:green;
+    font-size:20px;
+}
+
+.small_title{
+    color:green;
+    font-size:16px;
+}
+
+.story_titles{
+    color:brown;
+    font-size:18px;
+    font: bold;
+}
+
+.links{
+    color:green;
+    font-size:18px;
+}
+
+.img{
+    background-image: url(IMG_7738.jpg);
+    height: 350px;
+    width: 700px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+p {
+    color:green;
+    background-color:white;
+    font-size:12px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+@media screen and (max-width: 500px) {
+    .title {
+        font-size: 16px;
+    }
+    .img{
+        background-image: url(IMG_7739.jpg);
+        height: 700px;
+        width: 350px;
+    }
+}
