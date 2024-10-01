@@ -1,1 +1,0 @@
-This website is called 'ALL DEAD' and it will contain 9 original short stories by Tatenda Mudavanhu. The stories are originally broadcast on Instagram as video. So this website will be the text and image based version of the stories. Readers can rate as well as comment on the stories. Instagram will be linked. 
