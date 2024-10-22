@@ -1,5 +1,5 @@
 //import mongoose from 'mongoose'
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const express = require('express');
 const path = require('path');
 const app = express();
@@ -73,18 +73,19 @@ app.get('/about', (req, res) => {
 });
 
 // Route 3: Dynamic Route for Episodes
-app.get('/episode/:episodeNum', (req, res) => {
-  const episodeNum = req.params.episodeNum;
+app.get('/episode/:epNum', (req, res) => {
+  const epNum = req.params.episodeNum;
   
   // Define episode titles based on episode number
   const episodeTitles = {
     1: "Ep 1 - A GREAT DAY",
     2: "Ep 2 - THE TRAM WRECK",
     3: "Ep 3 - HELP FROM THE TURKISH GUY"
+    
   };
 
   // Check if the episode number exists
-  if (episodeTitles[episodeNum]) {
+  if (episodeTitles[epNum]) {
     // Serve a template HTML for each episode dynamically
     res.send(`
       <!DOCTYPE html>
@@ -92,16 +93,16 @@ app.get('/episode/:episodeNum', (req, res) => {
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${episodeTitles[episodeNum]}</title>
+        <title>${episodeTitles[epNum]}</title>
         <link rel="stylesheet" href="/styles.css">
       </head>
       <body>
         <div class="container">
           <div class="box A1">
-            <h1>${episodeTitles[episodeNum]}</h1>
+            <h1>${episodeTitles[epNum]}</h1>
           </div>
           <div class="box A2">
-            <p>This is content for episode ${episodeNum}. You can add more specific content here.</p>
+            <p>This is content for episode ${epNum}. You can add more specific content here.</p>
           </div>
         </div>
       </body>
