@@ -72,44 +72,44 @@ app.get('/about', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'about.html'));
 });
 
-// Route 3: Dynamic Route for Episodes
-app.get('/episode/:epNum', (req, res) => {
-  const epNum = req.params.episodeNum;
-  
-  // Define episode titles based on episode number
-  const episodeTitles = {
-    1: "Ep 1 - A GREAT DAY",
-    2: "Ep 2 - THE TRAM WRECK",
-    3: "Ep 3 - HELP FROM THE TURKISH GUY"
-    
-  };
+// *** Changes below to dynamically fetch content from the database ***
 
-  // Check if the episode number exists
-  if (episodeTitles[epNum]) {
-    // Serve a template HTML for each episode dynamically
-    res.send(`
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${episodeTitles[epNum]}</title>
-        <link rel="stylesheet" href="/styles.css">
-      </head>
-      <body>
-        <div class="container">
-          <div class="box A1">
-            <h1>${episodeTitles[epNum]}</h1>
+// Route 3: Dynamic Route for Episodes
+app.get('/episode/:epNum', async (req, res) => {
+  const epNum = req.params.epNum;
+
+  // ** Fetch the episode content from MongoDB based on the path (epNum) **
+  try {
+    const episode = await Story.findOne({ path: epNum });
+
+    // Check if the episode exists
+    if (episode) {
+      res.send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>${episode.title}</title>
+          <link rel="stylesheet" href="/styles.css">
+        </head>
+        <body>
+          <div class="container">
+            <div class="box A1">
+              <h1>${episode.title}</h1>
+            </div>
+            <div class="box A2">
+              <p>${episode.content}</p> <!-- Displaying the actual content from the database -->
+            </div>
           </div>
-          <div class="box A2">
-            <p>This is content for episode ${epNum}. You can add more specific content here.</p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `);
-  } else {
-    res.status(404).send('Episode not found');
+        </body>
+        </html>
+      `);
+    } else {
+      res.status(404).send('Episode not found');
+    }
+  } catch (error) {
+    res.status(500).send('Error retrieving episode');
   }
 });
 
@@ -118,3 +118,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
