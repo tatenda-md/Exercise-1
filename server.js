@@ -1,14 +1,71 @@
+//import mongoose from 'mongoose'
+const mongoose = require('mongoose')
 const express = require('express');
 const path = require('path');
 const app = express();
 
+mongoose.connect('mongodb://127.0.0.1:27017/alldead')
+  .then(() => console.log('💽 Database connected'))
+  .catch(error => console.error(error))
+
+const storySchema = new mongoose.Schema({
+  path: String,
+  title: String,
+  content: String
+})
+const Story = mongoose.model('Story', storySchema)
+
 // Serve static files from the 'public' folder
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 // Route 1: Home Page
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
+app.get('/create', (req, res) => {
+  res.send(`
+    <form action="/create" method="post">
+      Path: <input type="text" name="path"><br>
+      Title: <input type="text" name="title"><br>
+      Content: <textarea name="content"></textarea><br>
+      <input type="Submit">
+    </form>
+  `)
+})
+
+app.post('/create', async (req, res) => {
+  console.log(req.body)
+
+  const episode = new Story({
+    path: req.body.path,
+    title: req.body.title,
+    content: req.body.content
+  })
+  await episode.save()
+
+  res.redirect('/list')
+})
+
+app.get('/list', async (req, res) => {
+  const episodes = await Story.find({}).exec()
+  console.log(episodes)
+  const episodeItem = (episode) => {
+    return `<li>${episode.title} (${episode.path}) - <a href="/delete/${episode.path}">Delete</a></li>`
+  }
+  res.send(`
+    <ul>
+      ${episodes.map(episodeItem).join("\n")}
+    </ul>
+  `)
+})
+
+app.get('/delete/:path', async (req, res) => {
+  await Story.findOneAndDelete({ path: req.params.path })
+  res.redirect("/list")
+})
 
 // Route 2: Static About Page
 app.get('/about', (req, res) => {
